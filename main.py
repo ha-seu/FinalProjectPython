@@ -1,4 +1,4 @@
 from board import Board
 
-a = Board(2,2)
-print(a.playboard)
+a = Board(8,8)
+print(a)
