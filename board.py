@@ -26,48 +26,48 @@ class Board:
         x = int(coord[0])-1
         y = int(coord[2])-1
         list_of_valid = []
+        if(not self.playboard[y][x].color==0):
+            return 0
         # right check
-        if x < self.width-2 and self.playboard[y][x+1] != color and self.playboard[y][x+1].color != 0:
-            for i in range(x + 2,self.width-1):
+        if x < self.width-2 and self.playboard[y][x+1].color != color and self.playboard[y][x+1].color != 0:
+            for i in range(x + 1, self.width):
                 if self.playboard[y][i].color == color:
                     list_of_valid += [[y, i, 1]]
         # top-right check
-        if x < self.width-2 and y > 1 and self.playboard[y-1][x+1] != color and self.playboard[y-1][x+1].color != 0:
+        if x < self.width-2 and y > 1 and self.playboard[y-1][x+1].color != color and self.playboard[y-1][x+1].color != 0:
             for i in range(2, min(self.width-x, y)):
                 if self.playboard[y-i][x+i].color == color:
                     list_of_valid += [[i, i, 2]]
         # top check
-        if y > 1 and self.playboard[y-1][x] != color and self.playboard[y-1][x].color != 0:
-            for i in range(y - 2, 0, -1):
+        if y > 1 and self.playboard[y-1][x].color != color and self.playboard[y-1][x].color != 0:
+            for i in range(y - 1, -1, -1):
                 if self.playboard[i][x].color == color:
                     list_of_valid += [[i, x, 3]]
         # top-left check
-        if x > 1 and y > 1 and self.playboard[y-1][x-1] != color and self.playboard[y-1][x-1].color != 0:
+        if x > 1 and y > 1 and self.playboard[y-1][x-1].color != color and self.playboard[y-1][x-1].color != 0:
             for i in range(2, min(x, y)):
                 if self.playboard[y-i][x-i].color == color:
                     list_of_valid += [[i, i, 4]]
         # left check
-        if x > 1 and self.playboard[y][x-1] != color and self.playboard[y][x-1].color != 0:
-            for i in range(x - 2, 0, -1):
+        if x > 1 and self.playboard[y][x-1].color != color and self.playboard[y][x-1].color != 0:
+            for i in range(x - 1, -1, -1):
                 if self.playboard[y][i].color == color:
                     list_of_valid += [[y, i, 5]]
         # bottom-left check
-        if x > 1 and y < self.height-2 and self.playboard[y+1][x-1] != color and self.playboard[y+1][x-1].color != 0:
+        if x > 1 and y < self.height-2 and self.playboard[y+1][x-1].color != color and self.playboard[y+1][x-1].color != 0:
             for i in range(2, min(x, self.height-y)):
                 if self.playboard[y+i][x-i].color == color:
                     list_of_valid += [[i, i, 6]]
         # bottom check
-        if y < self.height-2 and self.playboard[y+1][x] != color and self.playboard[y+1][x].color != 0:
-            for i in range(y + 2, self.height-1):
+        if y < self.height-2 and self.playboard[y+1][x].color != color and self.playboard[y+1][x].color != 0:
+            for i in range(y + 1, self.height):
                 if self.playboard[i][x].color == color:
                     list_of_valid += [[i, x, 7]]
         # bottom-right check
-        if x < self.width-2 and y < self.height-2 and self.playboard[y+1][x+1] != color and self.playboard[y+1][x+1].color != 0:
+        if x < self.width-2 and y < self.height-2 and self.playboard[y+1][x+1].color != color and self.playboard[y+1][x+1].color != 0:
             for i in range(2, min(self.height-x, self.height-y)):
                 if self.playboard[y+i][x+i].color == color:
                     list_of_valid += [[i, i, 8]]
-
-
         return list_of_valid
 
     def do_move(self, coord, direction):
@@ -122,3 +122,19 @@ class Board:
                     if self.playboard[y+k][x+k].color != self.playboard[y+i[0]][x+i[1]].color:
                         self.playboard[y+k][x+k].flip()
                 self.playboard[y][x].change_color(self.playboard[y+i[0]][x+i[1]].color)
+
+    def count_blank(self):
+        count = 0
+        for i in range(self.height):
+            for k in range(self.width):
+                if self.playboard[i][k].piece_color()==0:
+                    count +=1
+        return count
+    
+    def count_blank(self):
+        count = 0
+        for i in range(self.height):
+            for k in range(self.width):
+                if self.playboard[i][k].piece_color()==0:
+                    count +=1
+        return count
