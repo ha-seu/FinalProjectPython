@@ -9,3 +9,4 @@ print(Piece.blank)
 #while(Piece.black > 0 and Piece.white > 0 and Piece.blank > 0):
 print("Black, it is your turn.")
 coord = input("Enter your coordinate selection in x,y format.\n")
+board.valid_check(coord)
