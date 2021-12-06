@@ -25,47 +25,13 @@ class Board:
     def valid_move(self, coord, color):
         x = int(coord[0])-1
         y = int(coord[2])-1
+        list_of_valid = []
         # left check
-        if x > 2:
-            if self.playboard[y][x-1].color != color and self.playboard[y][x-1].color != 0:
-                if self.playboard[y][x-2].color == color:
-                    return [y, x-1]
-        # right check
-        if x < self.width-2:
-            if self.playboard[y][x+1].color != color and self.playboard[y][x+1].color !=0:
-                if self.playboard[y][x+2].color == color:
-                    return [y, x+1]
-        # up check
-        if y > 2:
-            if self.playboard[y-1][x].color != color and self.playboard[y-1][x].color !=0:
-                if self.playboard[y-2][x].color == color:
-                    return [y-1, x]
-        # down check
-        if y < self.height-2:
-            if self.playboard[y+1][x].color != color and self.playboard[y+1][x].color !=0:
-                if self.playboard[y+2][x].color == color:
-                    return [y+1, x]
-        # up-left check
-        if x > 2 and y > 2:
-            if self.playboard[y-1][x-1].color != color and self.playboard[y-1][x-1].color != 0:
-                if self.playboard[y-2][x-2].color == color:
-                    return [y-1, x-1]
-        # up-right check
-        if x < self.width-2 and y > 2:
-            if self.playboard[y-1][x+1].color != color and self.playboard[y-1][x+1].color != 0:
-                if self.playboard[y-2][x+2].color == color:
-                    return [y-1, x+1]
-        # down-right check
-        if x < self.width-2 and y < self.height-2:
-            if self.playboard[y+1][x+1].color != color and self.playboard[y+1][x+1].color != 0:
-                if self.playboard[y+2][x+2].color == color:
-                    return [y+1, x+1]
-        # down-left check
-        if x > 2 and y < self.height-2:
-            if self.playboard[y+1][x-1].color != color and self.playboard[y+1][x-1].color != 0:
-                if self.playboard[y+2][x-2].color == color:
-                    return [y+1, x-1]
-        return 0
+        if x > 1 and self.playboard[y][x-1] != color and self.playboard[y][x-1].color != 0:
+            for i in range(x-2,0,-1):
+                if self.playboard[y][i].color == color:
+                    list_of_valid += [y, i]
+        return list_of_valid
 
     def do_move(self, coord, color, direction):
         x = int(coord[0]) - 1
