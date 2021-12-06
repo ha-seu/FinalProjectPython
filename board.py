@@ -1,6 +1,9 @@
 from piece import Piece
+
+
 class Board:
 
+    # Initialization of the board by defining its width and height. The middle four pieces are laid down in the middle.
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -10,6 +13,7 @@ class Board:
         self.playboard[height // 2][width // 2].change_color(2)
         self.playboard[height // 2 - 1][width // 2 - 1].change_color(2)
 
+    # Over ride for the string method, prints a board with grid markers and W and B by calling piece_color.
     def __str__(self):
         board = ""
         for i in range(self.width+1):
@@ -22,11 +26,14 @@ class Board:
             board += "\n"
         return board
 
+    # Check if the move inputted coordinate is valid for a certain color. Returns a list of the valid moves.
+    # The returned coordinates are the "end" x, y and an integer representing direction. Right as 1, going CCW
     def valid_move(self, coord, color):
         x = int(coord[0])-1
         y = int(coord[2])-1
         list_of_valid = []
-        if(not self.playboard[y][x].color==0):
+        # make sure the new piece can't "over ride" a piece and must be on a blank
+        if not self.playboard[y][x].color == 0:
             return 0
         # right check
         if x < self.width-2 and self.playboard[y][x+1].color != color and self.playboard[y][x+1].color != 0:
@@ -70,9 +77,11 @@ class Board:
                     list_of_valid += [[i, i, 8]]
         return list_of_valid
 
+    # Function to actually "move" the piece, takes the returned list from valid_move.
     def do_move(self, coord, direction):
         x = int(coord[0]) - 1
         y = int(coord[2]) - 1
+        # Iterates through each valid move in the list.
         for i in direction:
             # right flip
             if i[2] == 1:
@@ -123,18 +132,29 @@ class Board:
                         self.playboard[y+k][x+k].flip()
                 self.playboard[y][x].change_color(self.playboard[y+i[0]][x+i[1]].color)
 
+    # Returns the count of blanks on the board
     def count_blank(self):
         count = 0
         for i in range(self.height):
             for k in range(self.width):
-                if self.playboard[i][k].piece_color()==0:
-                    count +=1
+                if self.playboard[i][k].color == 0:
+                    count += 1
         return count
-    
-    def count_blank(self):
+
+    # Returns the count of white pieces on the board
+    def count_white(self):
         count = 0
         for i in range(self.height):
             for k in range(self.width):
-                if self.playboard[i][k].piece_color()==0:
-                    count +=1
+                if self.playboard[i][k].color == 2:
+                    count += 1
+        return count
+
+    # Returns the count of black pieces on the board
+    def count_black(self):
+        count = 0
+        for i in range(self.height):
+            for k in range(self.width):
+                if self.playboard[i][k].color == 1:
+                    count += 1
         return count
