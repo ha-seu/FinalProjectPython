@@ -22,13 +22,18 @@ class Board:
             board += "\n"
         return board
 
-    def valid_check(self, coord):
-        same_count = 0
-        other_count = 0
-        for i in range(self.width):
-            if self.playboard[coord[1]][i].color == self.playboard[coord[1]][coord[0]].color:
-                same_count +=1
-            if self.playboard[coord[1]][i].color != self.playboard[coord[1]][coord[0]].color and self.playboard[coord[1]][i].color != 0:
-                other_count +=1
-        if(same_count>2 and other_count:
+    def valid_move(self, coord, color):
+        x = int(coord[0])-1
+        y = int(coord[2])-1
+        # left check
+        if x > 2:
+            if self.playboard[y][x-1].color != color and self.playboard[y][x-1].color != 0:
+                if self.playboard[y][x-2].color == color:
+                    return True
+        # right check
+        if x < self.width-1:
+            if self.playboard[y][x+1].color != color and self.playboard[y][x+1].color !=0:
+                if self.playboard[y][x+2].color == color:
+                    return True
 
+    #def do_move(self, coord, color):
