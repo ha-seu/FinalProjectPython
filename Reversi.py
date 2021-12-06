@@ -24,19 +24,19 @@ class Reversi:
     # Runs through black's turn
     def black_turn(self):
         print("Black, it is your turn.")
-        coord = input("Enter your coordinate selection in x,y format.\n")
+        coord = self.input_ask()
         while not self.board.valid_move(coord, 1):
             print("Invalid coordinate, please enter a valid placement")
-            coord = input("Enter your coordinate selection in x,y format.\n")
+            coord = self.input_ask()
         self.board.do_move(coord, self.board.valid_move(coord, 1))
 
     # Runs through white's turn
     def white_turn(self):
         print("White, it is your turn.")
-        coord = input("Enter your coordinate selection in x,y format.\n")
+        coord = self.input_ask()
         while not self.board.valid_move(coord, 2):
             print("Invalid coordinate, please enter a valid placement")
-            coord = input("Enter your coordinate selection in x,y format.\n")
+            coord = self.input_ask()
         self.board.do_move(coord, self.board.valid_move(coord, 2))
 
     # Prints out a winner determined by the amount of pieces each player has
@@ -45,3 +45,11 @@ class Reversi:
             print("White Wins!")
         if self.board.count_white() < self.board.count_black():
             print("Black Wins!")
+
+    # Ask for coordinate input, returns a list of two integers in x y format
+    def input_ask(self):
+        input_list = input("Enter your coordinate selection in x y format.\n")
+        coord_list = input_list.split()
+        for i in range(len(coord_list)):
+            coord_list[i] = int(coord_list[i])
+        return coord_list

@@ -30,7 +30,7 @@ class Board:
     # The returned coordinates are the "end" x, y and an integer representing direction. Right as 1, going CCW
     def valid_move(self, coord, color):
         x = int(coord[0])-1
-        y = int(coord[2])-1
+        y = int(coord[1])-1
         list_of_valid = []
         # make sure the new piece can't "over ride" a piece and must be on a blank
         if not self.playboard[y][x].color == 0:
@@ -80,7 +80,7 @@ class Board:
     # Function to actually "move" the piece, takes the returned list from valid_move.
     def do_move(self, coord, direction):
         x = int(coord[0]) - 1
-        y = int(coord[2]) - 1
+        y = int(coord[1]) - 1
         # Iterates through each valid move in the list.
         for i in direction:
             # right flip
