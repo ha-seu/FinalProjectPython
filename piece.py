@@ -1,11 +1,19 @@
 class Piece:
 
-    # Initialization of the piece class taking the x and y coordinates as color data (0 = blank, 1 = black, 2 = white)
     def __init__(self, color):
+        """Initialization of the piece class
+
+            :param color: color data (0 = blank, 1 = black, 2 = white)
+            :type color: int
+            """
         self.color = color
 
-    # Return the color of the piece "B" for Black, "W" for White
     def piece_color(self):
+        """Return the color of the piece
+
+        :rtype: char
+        :return: " " for blank, "B" for black, "W" for white
+        """
         if self.color == 1:
             return "B"
         if self.color == 2:
@@ -13,15 +21,19 @@ class Piece:
         if self.color == 0:
             return " "
 
-    # Change the color of the piece depending on what the inputted color is. Used for changing blanks to a certain color
     def change_color(self, color):
+        """Change the color of the piece depending on what the inputted color is.
+
+        :param color: color data (0 = blank, 1 = black, 2 = white)
+        :type color: int
+        """
         if color == 2:
             self.color = 2
         if color == 1:
             self.color = 1
 
-    # "Flip" a piece between black and white
     def flip(self):
+        """Flip a piece between black and white"""
         if self.color == 1:
             self.color = 2
         else:

@@ -3,8 +3,13 @@ from piece import Piece
 
 class Board:
 
-    # Initialization of the board by defining its width and height. The middle four pieces are laid down in the middle.
     def __init__(self, width, height):
+        """Initialization of the board by defining its width and height. The middle four pieces are laid down in the middle.
+
+        :param width: the width of the board
+        :param height: the height of the board
+        :type width, height: int
+        """
         self.width = width
         self.height = height
         self.playboard = [[Piece(0) for i in range(0, width)] for i in range(0, height)]
@@ -13,8 +18,11 @@ class Board:
         self.playboard[height // 2][width // 2].change_color(2)
         self.playboard[height // 2 - 1][width // 2 - 1].change_color(2)
 
-    # Over ride for the string method, prints a board with grid markers and W and B by calling piece_color.
     def __str__(self):
+        """Override for the string method, prints a board with grid markers and W and B for the pieces
+        :rtype: String
+        :return board: A String with formatting to print a text based board
+        """
         board = ""
         for i in range(self.width+1):
             board += str(i)+"|"
@@ -26,135 +34,71 @@ class Board:
             board += "\n"
         return board
 
-    # Check if the move inputted coordinate is valid for a certain color. Returns a list of the valid moves.
-    # The returned coordinates are the "end" x, y and an integer representing direction. Right as 1, going CCW
-    def valid_move(self, coord, color):
+    def check_move(self, coord, color):
+        """Check if a coordinate is valid, find pieces to flip, then executes the move
+        :param coord: The coordinate of the piece that is being attempted to be placed
+        :param color: The color of the player putting the piece
+        :type coord: list
+        :type color: int
+        :return list of the pieces to flip
+        :rtype list
+        """
         x = int(coord[0])-1
         y = int(coord[1])-1
-        list_of_valid = []
+        list_flip = [[y, x]]
         # make sure the new piece can't "over ride" a piece and must be on a blank
         if not self.playboard[y][x].color == 0:
+            return list_flip
+
+        # check in all 8 directions from the coordinate to check for pieces to flip.
+        for i in [-1, 0, 1]:
+            for j in [-1, 0 , 1]:
+                try:
+                    test_flip = []
+                    for k in range(1,max(self.width, self.height)):
+                        if self.playboard[y+i*k][x+j*k].color == color:
+                            list_flip.extend(test_flip)
+                        elif not self.playboard[y+i*k][x+j*k].color == color and not self.playboard[y+i*k][x+j*k].color == 0:
+                            test_flip.append((y+i*k, x+j*k))
+                        else:
+                            break
+                except IndexError: # exception for when the index goes to the board's edge
+                    pass
+        return list_flip
+
+    def do_move(self, list_flip, color):
+        if list_flip:
+            for i, j in list_flip:
+                self.playboard[i][j].color = color
+            return 1
+        else:
             return 0
-        # right check
-        if x < self.width-2 and self.playboard[y][x+1].color != color and self.playboard[y][x+1].color != 0:
-            for i in range(x + 1, self.width):
-                if self.playboard[y][i].color == color:
-                    list_of_valid += [[y, i, 1]]
-        # top-right check
-        if x < self.width-2 and y > 1 and self.playboard[y-1][x+1].color != color and self.playboard[y-1][x+1].color != 0:
-            for i in range(2, min(self.width-x, y)):
-                if self.playboard[y-i][x+i].color == color:
-                    list_of_valid += [[i, i, 2]]
-        # top check
-        if y > 1 and self.playboard[y-1][x].color != color and self.playboard[y-1][x].color != 0:
-            for i in range(y - 1, -1, -1):
-                if self.playboard[i][x].color == color:
-                    list_of_valid += [[i, x, 3]]
-        # top-left check
-        if x > 1 and y > 1 and self.playboard[y-1][x-1].color != color and self.playboard[y-1][x-1].color != 0:
-            for i in range(2, min(x, y)):
-                if self.playboard[y-i][x-i].color == color:
-                    list_of_valid += [[i, i, 4]]
-        # left check
-        if x > 1 and self.playboard[y][x-1].color != color and self.playboard[y][x-1].color != 0:
-            for i in range(x - 1, -1, -1):
-                if self.playboard[y][i].color == color:
-                    list_of_valid += [[y, i, 5]]
-        # bottom-left check
-        if x > 1 and y < self.height-2 and self.playboard[y+1][x-1].color != color and self.playboard[y+1][x-1].color != 0:
-            for i in range(2, min(x, self.height-y)):
-                if self.playboard[y+i][x-i].color == color:
-                    list_of_valid += [[i, i, 6]]
-        # bottom check
-        if y < self.height-2 and self.playboard[y+1][x].color != color and self.playboard[y+1][x].color != 0:
-            for i in range(y + 1, self.height):
-                if self.playboard[i][x].color == color:
-                    list_of_valid += [[i, x, 7]]
-        # bottom-right check
-        if x < self.width-2 and y < self.height-2 and self.playboard[y+1][x+1].color != color and self.playboard[y+1][x+1].color != 0:
-            for i in range(2, min(self.height-x, self.height-y)):
-                if self.playboard[y+i][x+i].color == color:
-                    list_of_valid += [[i, i, 8]]
-        return list_of_valid
 
-    # Function to actually "move" the piece, takes the returned list from valid_move.
-    def do_move(self, coord, direction):
-        x = int(coord[0]) - 1
-        y = int(coord[1]) - 1
-        # Iterates through each valid move in the list.
-        for i in direction:
-            # right flip
-            if i[2] == 1:
-                for k in range(x, i[1]):
-                    if self.playboard[y][k].color != self.playboard[i[0]][i[1]].color:
-                        self.playboard[y][k].flip()
-                self.playboard[y][x].change_color(self.playboard[i[0]][i[1]].color)
-            # top-right flip
-            if i[2] == 2:
-                for k in range(1, i[1]):
-                    if self.playboard[y-k][x+k].color != self.playboard[y-i[0]][x+i[1]].color:
-                        self.playboard[y-k][x+k].flip()
-                self.playboard[y][x].change_color(self.playboard[y-i[0]][x+i[1]].color)
-            # top flip
-            if i[2] == 3:
-                for k in range(i[0], y):
-                    if self.playboard[k][x].color != self.playboard[i[0]][i[1]].color:
-                        self.playboard[k][x].flip()
-                self.playboard[y][x].change_color(self.playboard[i[0]][i[1]].color)
-            # top-left flip
-            if i[2] == 4:
-                for k in range(1, i[1]):
-                    if self.playboard[y-k][x-k].color != self.playboard[y-i[0]][x-i[1]].color:
-                        self.playboard[y-k][x-k].flip()
-                self.playboard[y][x].change_color(self.playboard[y-i[0]][x-i[1]].color)
-            # left flip
-            if i[2] == 5:
-                for k in range(i[1], x):
-                    if self.playboard[y][k].color != self.playboard[i[0]][i[1]].color:
-                        self.playboard[y][k].flip()
-                self.playboard[y][x].change_color(self.playboard[i[0]][i[1]].color)
-            # bottom-left flip
-            if i[2] == 6:
-                for k in range(1, i[1]):
-                    if self.playboard[y+k][x-k].color != self.playboard[y+i[0]][x-i[1]].color:
-                        self.playboard[y+k][x-k].flip()
-                self.playboard[y][x].change_color(self.playboard[y+i[0]][x-i[1]].color)
-            # bottom flip
-            if i[2] == 7:
-                for k in range(y, i[0]):
-                    if self.playboard[k][x].color != self.playboard[i[0]][i[1]].color:
-                        self.playboard[k][x].flip()
-                self.playboard[y][x].change_color(self.playboard[i[0]][i[1]].color)
-            # bottom-right flip
-            if i[2] == 8:
-                for k in range(1, i[1]):
-                    if self.playboard[y+k][x+k].color != self.playboard[y+i[0]][x+i[1]].color:
-                        self.playboard[y+k][x+k].flip()
-                self.playboard[y][x].change_color(self.playboard[y+i[0]][x+i[1]].color)
-
-    # Returns the count of blanks on the board
-    def count_blank(self):
+    def count_pieces(self, color):
+        """Returns the count of blanks on the board
+        :param color: color of the piece to count
+        :type: int
+        :rtype: int
+        :return: count of the blank pieces on the board
+        """
         count = 0
         for i in range(self.height):
             for k in range(self.width):
-                if self.playboard[i][k].color == 0:
+                if self.playboard[i][k].color == color:
                     count += 1
         return count
 
-    # Returns the count of white pieces on the board
-    def count_white(self):
+    def count_valid_moves(self, color):
+        """Returns the count of valid moves
+        :param color: color you want to count the number of valid moves
+        :type int
+        :rtype: int
+        :return: number count of the valid moves left
+        """
         count = 0
-        for i in range(self.height):
-            for k in range(self.width):
-                if self.playboard[i][k].color == 2:
-                    count += 1
-        return count
-
-    # Returns the count of black pieces on the board
-    def count_black(self):
-        count = 0
-        for i in range(self.height):
-            for k in range(self.width):
-                if self.playboard[i][k].color == 1:
-                    count += 1
+        for y in range(0, self.height):
+            for x in range(0, self.width):
+                if self.playboard[y][x].color == 0:
+                    if len(self.check_move([y+1, x+1], color)) > 1:
+                        count += 1
         return count
