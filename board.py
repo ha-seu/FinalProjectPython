@@ -92,8 +92,8 @@ class Board:
         """Returns the count of valid moves
         :param color: color you want to count the number of valid moves
         :type int
-        :rtype: int
-        :return: number count of the valid moves left
+        :rtype: list
+        :return: list of possible moves
         """
         valid_moves = []
         for y in range(0, self.height):
