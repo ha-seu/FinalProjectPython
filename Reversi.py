@@ -26,6 +26,7 @@ class Reversi:
     def black_turn(self):
         """Runs through black's turn"""
         print("Black, it is your turn.")
+        print("These are your possible moves: " + str(self.board.count_valid_moves(1)))
         coord = self.input_ask()
         while len(self.board.check_move(coord, 1))==1:
             print("Invalid coordinate, please enter a valid placement")
@@ -35,6 +36,7 @@ class Reversi:
     def white_turn(self):
         """Runs through white's turn"""
         print("White, it is your turn.")
+        print("These are your possible moves: " + str(self.board.count_valid_moves(2)))
         coord = self.input_ask()
         while len(self.board.check_move(coord, 2)) == 1:
             print("Invalid coordinate, please enter a valid placement")
@@ -47,6 +49,8 @@ class Reversi:
             print("White Wins!")
         if self.board.count_pieces(2) < self.board.count_pieces(1):
             print("Black Wins!")
+        else:
+            print("A tie!")
 
 
     def input_ask(self):
@@ -69,7 +73,7 @@ class Reversi:
         :type int
         """
         if(self.board.count_pieces(2) > 0 and self.board.count_pieces(1) > 0 \
-                and self.board.count_pieces(0) > 0 and self.board.count_valid_moves(color) > 0):
+                and self.board.count_pieces(0) > 0 and len(self.board.count_valid_moves(color)) > 0):
             return True
         else:
             return False

@@ -95,10 +95,10 @@ class Board:
         :rtype: int
         :return: number count of the valid moves left
         """
-        count = 0
+        valid_moves = []
         for y in range(0, self.height):
             for x in range(0, self.width):
                 if self.playboard[y][x].color == 0:
-                    if len(self.check_move([y+1, x+1], color)) > 1:
-                        count += 1
-        return count
+                    if len(self.check_move([x+1, y+1], color)) > 1:
+                        valid_moves.append([x+1, y+1])
+        return valid_moves
